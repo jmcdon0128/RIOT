@@ -29,6 +29,8 @@
 #include "vendor/stm32l476xx.h"
 #elif defined(CPU_MODEL_STM32L432KC)
 #include "vendor/stm32l432xx.h"
+#elif defined(CPU_MODEL_STM32L475VG)
+#include "vendor/stm32l475xx.h"
 #endif
 
 #ifdef __cplusplus
