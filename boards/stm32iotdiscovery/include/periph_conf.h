@@ -90,38 +90,10 @@ static const timer_conf_t timer_config[] = {
  */
 static const uart_conf_t uart_config[] = {
     {
-        .dev        = USART2,
-        .rcc_mask   = RCC_APB1ENR1_USART2EN,
-        .rx_pin     = GPIO_PIN(PORT_A, 3),
-        .tx_pin     = GPIO_PIN(PORT_A, 2),
-        .rx_af      = GPIO_AF7,
-        .tx_af      = GPIO_AF7,
-        .bus        = APB1,
-        .irqn       = USART2_IRQn,
-#ifdef UART_USE_DMA
-        .dma_stream = 6,
-        .dma_chan   = 4
-#endif
-    },
-    {
-        .dev        = USART3,
-        .rcc_mask   = RCC_APB1ENR1_USART3EN,
-        .rx_pin     = GPIO_PIN(PORT_C, 11),
-        .tx_pin     = GPIO_PIN(PORT_C, 10),
-        .rx_af      = GPIO_AF7,
-        .tx_af      = GPIO_AF7,
-        .bus        = APB1,
-        .irqn       = USART3_IRQn,
-#ifdef UART_USE_DMA
-        .dma_stream = 5,
-        .dma_chan   = 4
-#endif
-    },
-    {
         .dev        = USART1,
         .rcc_mask   = RCC_APB2ENR_USART1EN,
-        .rx_pin     = GPIO_PIN(PORT_A, 10),
-        .tx_pin     = GPIO_PIN(PORT_A, 9),
+        .rx_pin     = GPIO_PIN(PORT_B, 7),
+        .tx_pin     = GPIO_PIN(PORT_B, 6),
         .rx_af      = GPIO_AF7,
         .tx_af      = GPIO_AF7,
         .bus        = APB2,
@@ -133,9 +105,7 @@ static const uart_conf_t uart_config[] = {
     }
 };
 
-#define UART_0_ISR          (isr_usart2)
-#define UART_1_ISR          (isr_usart3)
-#define UART_2_ISR          (isr_usart1)
+#define UART_0_ISR          (isr_usart1)
 
 #define UART_NUMOF          (sizeof(uart_config) / sizeof(uart_config[0]))
 /** @} */
@@ -206,14 +176,14 @@ static const uint8_t spi_divtable[2][5] = {
 
 static const spi_conf_t spi_config[] = {
     {
-        .dev      = SPI1,
-        .mosi_pin = GPIO_PIN(PORT_A, 7),
-        .miso_pin = GPIO_PIN(PORT_A, 6),
-        .sclk_pin = GPIO_PIN(PORT_A, 5),
+        .dev      = SPI3,
+        .mosi_pin = GPIO_PIN(PORT_C, 12),
+        .miso_pin = GPIO_PIN(PORT_C, 11),
+        .sclk_pin = GPIO_PIN(PORT_C, 10),
         .cs_pin   = GPIO_UNDEF,
         .af       = GPIO_AF5,
-        .rccmask  = RCC_APB2ENR_SPI1EN,
-        .apbbus   = APB2
+        .rccmask  = RCC_APB1ENR1_SPI3EN,
+        .apbbus   = APB1
     }
 };
 
