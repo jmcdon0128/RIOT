@@ -88,6 +88,7 @@ static const timer_conf_t timer_config[] = {
  * @name    UART configuration
  * @{
  */
+ 
 static const uart_conf_t uart_config[] = {
     {
         .dev        = USART1,
@@ -105,6 +106,7 @@ static const uart_conf_t uart_config[] = {
     }
 };
 
+
 #define UART_0_ISR          (isr_usart1)
 
 #define UART_NUMOF          (sizeof(uart_config) / sizeof(uart_config[0]))
@@ -114,6 +116,7 @@ static const uart_conf_t uart_config[] = {
  * @name    PWM configuration
  * @{
  */
+/*
 static const pwm_conf_t pwm_config[] = {
     {
         .dev      = TIM2,
@@ -147,7 +150,9 @@ static const pwm_conf_t pwm_config[] = {
     }
 };
 
+
 #define PWM_NUMOF           (sizeof(pwm_config) / sizeof(pwm_config[0]))
+*/
 /** @} */
 
 /**
@@ -181,7 +186,7 @@ static const spi_conf_t spi_config[] = {
         .miso_pin = GPIO_PIN(PORT_C, 11),
         .sclk_pin = GPIO_PIN(PORT_C, 10),
         .cs_pin   = GPIO_UNDEF,
-        .af       = GPIO_AF5,
+        .af       = GPIO_AF6,
         .rccmask  = RCC_APB1ENR1_SPI3EN,
         .apbbus   = APB1
     }

@@ -20,16 +20,14 @@
 
 #include "board.h"
 #include "periph/gpio.h"
+#include "periph/spi.h"
 
 void board_init(void)
 {
     /* initialize the CPU */
     cpu_init();
-
-    /* initialize the boards LED only if explicitly enabled (pin is already used
-     * for SPI_DEV(0)) */
-
-    gpio_init(LED0_PIN, GPIO_OUT);
-    gpio_init(LED1_PIN, GPIO_OUT);
+    /* Uncomment to initialize leds */
+    //gpio_init(LED0_PIN, GPIO_OUT);
+    //gpio_init(LED1_PIN, GPIO_OUT);
 
 }
