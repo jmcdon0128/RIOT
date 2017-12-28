@@ -1,12 +1,12 @@
 APPLICATION = tests_driver_spsgrf
-BOARD = stm32iotdiscovery
+BOARD = cgmfs
 
 RIOTBASE ?= $(CURDIR)/../..
 
 FEATURES_REQUIRED = periph_spi
 
 USEMODULE += spsgrf
-USEMODULE += xtimer
+#USEMODULE += xtimer
 
 QUIET ?= 1
 

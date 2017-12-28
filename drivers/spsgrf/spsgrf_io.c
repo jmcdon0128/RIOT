@@ -44,23 +44,21 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+
+/**
+ * Modified by Jason McDonald <jason.mcdonald@cumberlandgroupit.com> to work with stm32l475 running the RIOT OS
+ * */
 #include "spsgrf_io.h"
 #include "board.h"
 #include "periph/gpio.h"
 #include "periph/spi.h"
-
-
+#include "debug.h"
 
 /**
  * @defgroup SPSGR_IO_GPIO_Private_Defines                SPSGR_GPIO Private Defines
  * @{
  */
 #define POR_TIME ((uint16_t)0x1E00)
-
-/**
- * @}
- */
-
 
 /**
  * @defgroup SPSGRF_IO_SPI_Private_Constants             SPSGRF_IO_SPI Private Constants
@@ -105,9 +103,6 @@
                                                                                    header byte*/
 #define COMMAND_HEADER      BUILT_HEADER(HEADER_COMMAND_MASK, HEADER_WRITE_MASK) /*!< macro to build the command 
                                                                                    header byte*/
-/**
- * @}
- */ 
 
 
 /**
@@ -124,17 +119,7 @@ static struct {
 } spi_conf;
 
 /**
- * @}
- */
-
-
-/**
- * @defgroup SPSGRF_IO_SPI_Exported_Functions              SPSGRF_IO_SPI Exported Functions
- * @{
- */
-
-/**
- * @brief  Initializes SPI HAL.
+ * @brief  Initializes SPI.
  * @param  None
  * @retval None
  */
@@ -491,13 +476,5 @@ FlagStatus SpiritCheckShutdown(void)
 {
     return SpiritGpioGetLevel(RADIO_GPIO_SDN);
 }
-
-/**
- * @}
- */
-
-/**
- * @}
- */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

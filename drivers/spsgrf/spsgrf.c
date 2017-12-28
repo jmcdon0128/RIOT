@@ -269,18 +269,6 @@ volatile SpiritStatus g_xStatus;
  * @}
  */
 
-/** @defgroup Common_Private_FunctionsPrototypes             Common Private FunctionsPrototypes
- * @{
- */
-StatusBytes SpiritSpiWriteRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
-StatusBytes SpiritSpiReadRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
-StatusBytes SpiritSpiCommandStrobes(uint8_t cCommandCode);
-StatusBytes SpiritSpiWriteFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
-StatusBytes SpiritSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
-/**
- * @}
- */
-
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*++++++++++++++++++++ Functions ++++++++++++++++++++++++++++*/
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -1824,7 +1812,7 @@ OutputLevel SpiritGpioGetLevel(SpiritGpioPin xGpioX)
   s_assert_param(IS_SPIRIT_GPIO(xGpioX));
 
   /* Reads the SPIRIT_GPIOx register */
-  g_xStatus = SpiritSpiReadRegisters(xGpioX, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(xGpioX, 1, &tempRegValue);
 
   /* Mask the GPIO_SELECT field and returns the value according */
   tempRegValue &= 0xF8;
@@ -1856,7 +1844,7 @@ void SpiritGpioClockOutput(SpiritFunctionalState xNewState)
   s_assert_param(IS_SPIRIT_FUNCTIONAL_STATE(xNewState));
 
   /* Reads the MCU_CK_CONF register and mask the result to enable or disable the clock output */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   if(xNewState)
   {
@@ -1915,7 +1903,7 @@ void SpiritGpioSetXOPrescaler(ClockOutputXOPrescaler xXOPrescaler)
   s_assert_param(IS_SPIRIT_CLOCK_OUTPUT_XO(xXOPrescaler));
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the XO_RATIO field and writes the new value */
   tempRegValue &= 0x61;
@@ -1938,7 +1926,7 @@ ClockOutputXOPrescaler SpiritGpioGetXOPrescaler(void)
   uint8_t tempRegValue = 0x00;
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the XO_RATIO field and return the value */
   return ((ClockOutputXOPrescaler)(tempRegValue & 0x1E));
@@ -1960,7 +1948,7 @@ void SpiritGpioSetRCOPrescaler(ClockOutputRCOPrescaler xRCOPrescaler)
   s_assert_param(IS_SPIRIT_CLOCK_OUTPUT_RCO(xRCOPrescaler));
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the RCO_RATIO field and writes the new value */
   tempRegValue &= 0xFE;
@@ -1983,7 +1971,7 @@ ClockOutputRCOPrescaler SpiritGpioGetRCOPrescaler(void)
   uint8_t tempRegValue = 0x00;
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the RCO_RATIO field and returns the value */
   return ((ClockOutputRCOPrescaler)(tempRegValue & 0x01));
@@ -2005,7 +1993,7 @@ void SpiritGpioSetExtraClockCycles(ExtraClockCycles xExtraCycles)
   s_assert_param(IS_SPIRIT_CLOCK_OUTPUT_EXTRA_CYCLES(xExtraCycles));
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the CLOCK_TAIL field and writes the new value */
   tempRegValue &= 0x9F;
@@ -2029,7 +2017,7 @@ ExtraClockCycles SpiritGpioGetExtraClockCycles(void)
   uint8_t tempRegValue = 0x00;
 
   /* Reads the MCU_CLK_CONFIG register */
-  g_xStatus = SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(MCU_CK_CONF_BASE, 1, &tempRegValue);
 
   /* Mask the CLOCK_TAIL field and returns the value */
   return ((ExtraClockCycles)(tempRegValue & 0x60));
@@ -2121,7 +2109,7 @@ void SpiritIrq(IrqList xIrq, SpiritFunctionalState xNewState)
   s_assert_param(IS_SPIRIT_FUNCTIONAL_STATE(xNewState));
 
   /* Reads the IRQ_MASK registers */
-  g_xStatus = SpiritSpiReadRegisters(IRQ_MASK3_BASE, 4, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(IRQ_MASK3_BASE, 4, tempRegValue);
 
   /* Build the IRQ mask word */
   for(uint8_t i=0; i<4; i++)
@@ -2173,7 +2161,7 @@ void SpiritIrqGetMask(SpiritIrqs* pxIrqMask)
   uint8_t* pIrqPointer = (uint8_t*)pxIrqMask;
 
   /* Reads IRQ_MASK registers */
-  g_xStatus = SpiritSpiReadRegisters(IRQ_MASK3_BASE, 4, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(IRQ_MASK3_BASE, 4, tempRegValue);
 
   /* Build the IRQ mask word */
   for(char i=0; i<4; i++)
@@ -2207,7 +2195,7 @@ void SpiritIrqGetStatus(SpiritIrqs* pxIrqStatus)
   uint8_t* pIrqPointer = (uint8_t*)pxIrqStatus;
   
   /* Reads IRQ_STATUS registers */
-  g_xStatus = SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
 
   /* Build the IRQ Status word */
   for(uint8_t i=0; i<4; i++)
@@ -2228,7 +2216,7 @@ void SpiritIrqClearStatus(void)
   uint8_t tempRegValue[4];
 
   /* Reads the IRQ_STATUS registers clearing all the flags */
-  g_xStatus = SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
 
 }
 
@@ -2250,7 +2238,7 @@ SpiritBool SpiritIrqCheckFlag(IrqList xFlag)
   s_assert_param(IS_SPIRIT_IRQ_LIST(xFlag));
 
   /* Reads registers and build the status word */
-  g_xStatus = SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(IRQ_STATUS3_BASE, 4, tempRegValue);
   for(uint8_t i=0; i<4; i++)
   {
     tempValue += ((uint32_t)tempRegValue[i])<<(8*(3-i));
@@ -2290,7 +2278,7 @@ uint8_t SpiritLinearFifoReadNumElementsRxFifo(void)
   uint8_t tempRegValue;
 
   /* Reads the register value */
-  g_xStatus = SpiritSpiReadRegisters(LINEAR_FIFO_STATUS0_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(LINEAR_FIFO_STATUS0_BASE, 1, &tempRegValue);
 
   /* Build and return value */
   return (tempRegValue & 0x7F);
@@ -2308,7 +2296,7 @@ uint8_t SpiritLinearFifoReadNumElementsTxFifo(void)
   uint8_t tempRegValue;
 
   /* Reads the number of elements in TX FIFO and return the value */
-  g_xStatus = SpiritSpiReadRegisters(LINEAR_FIFO_STATUS1_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(LINEAR_FIFO_STATUS1_BASE, 1, &tempRegValue);
 
   /* Build and return value */
   return (tempRegValue & 0x7F);
@@ -2352,7 +2340,7 @@ uint8_t SpiritLinearFifoGetAlmostFullThresholdRx(void)
   uint8_t tempRegValue;
 
   /* Reads the almost full threshold for RX FIFO and return the value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG3_RXAFTHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG3_RXAFTHR_BASE, 1, &tempRegValue);
 
   /* Build and return value */
   return (tempRegValue & 0x7F);
@@ -2392,7 +2380,7 @@ uint8_t SpiritLinearFifoGetAlmostEmptyThresholdRx(void)
   uint8_t tempRegValue;
 
   /* Reads the almost empty threshold for RX FIFO and returns the value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG2_RXAETHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG2_RXAETHR_BASE, 1, &tempRegValue);
 
   /* Build and return value */
   return (tempRegValue & 0x7F);
@@ -2416,7 +2404,7 @@ void SpiritLinearFifoSetAlmostFullThresholdTx(uint8_t cThrTxFifo)
   s_assert_param(IS_FIFO_THR(cThrTxFifo));
 
   /* Reads the register value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG1_TXAFTHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG1_TXAFTHR_BASE, 1, &tempRegValue);
 
   /* Build the register value */
   tempRegValue &= 0x80;
@@ -2440,7 +2428,7 @@ uint8_t SpiritLinearFifoGetAlmostFullThresholdTx(void)
   uint8_t tempRegValue;
 
   /* Reads the almost full threshold for Tx FIFO and returns the value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG1_TXAFTHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG1_TXAFTHR_BASE, 1, &tempRegValue);
 
   /* Build and returns value */
   return (tempRegValue & 0x7F);
@@ -2462,7 +2450,7 @@ void SpiritLinearFifoSetAlmostEmptyThresholdTx(uint8_t cThrTxFifo)
   s_assert_param(IS_FIFO_THR(cThrTxFifo));
 
   /* Reads the register value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG0_TXAETHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG0_TXAETHR_BASE, 1, &tempRegValue);
 
   /* Build the register value */
   tempRegValue &= 0x80;
@@ -2484,7 +2472,7 @@ uint8_t SpiritLinearFifoGetAlmostEmptyThresholdTx(void)
   uint8_t tempRegValue;
 
   /* Reads the almost empty threshold for TX FIFO and returns the value */
-  g_xStatus = SpiritSpiReadRegisters(FIFO_CONFIG0_TXAETHR_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(FIFO_CONFIG0_TXAETHR_BASE, 1, &tempRegValue);
 
   /* Build and return value */
   return (tempRegValue & 0x7F);
@@ -2753,7 +2741,7 @@ void SpiritManagementWaExtraCurrent(void)
   uint8_t tmp= 0xCA;SpiritSpiWriteRegisters(0xB2, 1, &tmp); 
   tmp= 0x04;SpiritSpiWriteRegisters(0xA8, 1, &tmp); 
   /* just a read to loose some microsecs more */
-  SpiritSpiReadRegisters(0xA8, 1, &tmp);
+  (SpiritStatus *)SpiritSpiReadRegisters(0xA8, 1, &tmp);
   tmp= 0x00;SpiritSpiWriteRegisters(0xA8, 1, &tmp); 
 }
 
@@ -2791,7 +2779,7 @@ void SpiritPktBasicInit(PktBasicInit* pxPktBasicInit)
   s_assert_param(IS_BASIC_CONTROL_LENGTH(pxPktBasicInit->xControlLength));
 
   /* Reads the PROTOCOL1 register */
-  g_xStatus = SpiritSpiReadRegisters(PROTOCOL1_BASE, 1, &tempRegValue[0]);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PROTOCOL1_BASE, 1, &tempRegValue[0]);
 
   /* Mask a reserved bit */
   tempRegValue[0] &= ~0x20;
@@ -2803,7 +2791,7 @@ void SpiritPktBasicInit(PktBasicInit* pxPktBasicInit)
   g_xStatus = SpiritSpiWriteRegisters(PROTOCOL1_BASE, 1, &tempRegValue[0]);
 
   /* Reads the PCKT_FLT_OPTIONS register */
-  g_xStatus = SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
 
   /* Always reset the control and source filtering (also if it is not present in basic) */
   tempRegValue[0] &= ~(PCKT_FLT_OPTIONS_SOURCE_FILTERING_MASK | PCKT_FLT_OPTIONS_CONTROL_FILTERING_MASK);
@@ -2886,7 +2874,7 @@ void SpiritPktBasicGetInfo(PktBasicInit* pxPktBasicInit)
   uint8_t tempRegValue[10];
 
   /* Reads registers */
-  g_xStatus = SpiritSpiReadRegisters(PCKTCTRL4_BASE, 10, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTCTRL4_BASE, 10, tempRegValue);
 
   /* Length width */
   pxPktBasicInit->cPktLengthWidth=(tempRegValue[1] & 0x0F)+1;
@@ -2946,7 +2934,7 @@ void SpiritPktBasicAddressesInit(PktBasicAddressesInit* pxPktBasicAddresses)
 
 
   /* Reads the PCKT_FLT_OPTIONS ragister */
-  g_xStatus = SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
   
   /* Enables or disables filtering on my address */
   if(pxPktBasicAddresses->xFilterOnMyAddress == S_ENABLE)
@@ -3005,14 +2993,14 @@ void SpiritPktBasicGetAddressesInfo(PktBasicAddressesInit* pxPktBasicAddresses)
   uint8_t tempRegValue[3];
 
   /* Reads values on the PCKT_FLT_GOALS registers */
-  g_xStatus = SpiritSpiReadRegisters(PCKT_FLT_GOALS_BROADCAST_BASE, 3, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKT_FLT_GOALS_BROADCAST_BASE, 3, tempRegValue);
 
   /* Fit the structure with the read addresses */
   pxPktBasicAddresses->cBroadcastAddress = tempRegValue[0];
   pxPktBasicAddresses->cMulticastAddress = tempRegValue[1];
   pxPktBasicAddresses->cMyAddress = tempRegValue[2];
 
-  g_xStatus = SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKT_FLT_OPTIONS_BASE, 1, &tempRegValue[0]);
 
   /* Fit the structure with the read filtering bits */
   pxPktBasicAddresses->xFilterOnBroadcastAddress = (SpiritFunctionalState)((tempRegValue[0] >> 1) & 0x01);
@@ -3032,7 +3020,7 @@ void SpiritPktBasicSetFormat(void)
   uint8_t tempRegValue;
 
   /* Reads the register value */
-  g_xStatus = SpiritSpiReadRegisters(PCKTCTRL3_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTCTRL3_BASE, 1, &tempRegValue);
 
   /* Build the new value. Also set to 0 the direct RX mode bits */
   tempRegValue &= 0x0F;
@@ -3042,7 +3030,7 @@ void SpiritPktBasicSetFormat(void)
   g_xStatus = SpiritSpiWriteRegisters(PCKTCTRL3_BASE, 1, &tempRegValue);
 
   /* Reads the PCKTCTRL1_BASE register */
-  g_xStatus = SpiritSpiReadRegisters(PCKTCTRL1_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTCTRL1_BASE, 1, &tempRegValue);
 
   /* Build the new value. Set to 0 the direct TX mode bits */
   tempRegValue &= 0xF3;
@@ -3051,7 +3039,7 @@ void SpiritPktBasicSetFormat(void)
   g_xStatus = SpiritSpiWriteRegisters(PCKTCTRL1_BASE, 1, &tempRegValue);
 
   /* Reads the PROTOCOL1 register */
-  g_xStatus = SpiritSpiReadRegisters(PROTOCOL1_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PROTOCOL1_BASE, 1, &tempRegValue);
 
   /* Mask a reserved bit */
   tempRegValue &= ~0x20;
@@ -3075,7 +3063,7 @@ void SpiritPktBasicAddressField(SpiritFunctionalState xAddressField)
   s_assert_param(IS_SPIRIT_FUNCTIONAL_STATE(xAddressField));
 
   /* Reads the PCKTCTRL4 register value */
-  g_xStatus = SpiritSpiReadRegisters(PCKTCTRL4_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTCTRL4_BASE, 1, &tempRegValue);
 
   /* Build the address length for the register */
   if(xAddressField==S_ENABLE)
@@ -3103,7 +3091,7 @@ SpiritFunctionalState SpiritPktBasicGetAddressField(void)
   uint8_t tempRegValue;
 
   /* Reads the PCKTCTRL4 register value */
-  g_xStatus = SpiritSpiReadRegisters(PCKTCTRL4_BASE, 1, &tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTCTRL4_BASE, 1, &tempRegValue);
 
   /* Returns the address field value */
   if(tempRegValue & PCKTCTRL4_ADDRESS_LEN_MASK)
@@ -3172,7 +3160,7 @@ uint16_t SpiritPktBasicGetPayloadLength(void)
   overSize += (uint16_t) SpiritPktBasicGetControlLength();
 
   /* Reads the packet length registers */
-  g_xStatus = SpiritSpiReadRegisters(PCKTLEN1_BASE, 2, tempRegValue);
+  g_xStatus = (SpiritStatus *)SpiritSpiReadRegisters(PCKTLEN1_BASE, 2, tempRegValue);
 
   /* Returns the packet length */
   return ((((uint16_t)tempRegValue[0])<<8) + (uint16_t) tempRegValue[1]) - overSize;
@@ -9298,81 +9286,6 @@ void s_assert_failed(char* expression)
 }
 
 #endif
-
-/**
-* @brief  Write single or multiple RF Transceivers register
-* @param  cRegAddress: base register's address to be write
-* @param  cNbBytes: number of registers and bytes to be write
-* @param  pcBuffer: pointer to the buffer of values have to be written into registers
-* @retval StatusBytes
-*/
-StatusBytes SpiritSpiWriteRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer)
-{
-  StatusBytes *pStatus;
-  pStatus = (StatusBytes *) RadioSpiWriteRegisters(cRegAddress, cNbBytes, pcBuffer);
-  return *pStatus;
-}
-
-/**
-* @brief  Read single or multiple SPIRIT1 register
-* @param  cRegAddress: base register's address to be read
-* @param  cNbBytes: number of registers and bytes to be read
-* @param  pcBuffer: pointer to the buffer of registers' values read
-* @retval StatusBytes
-*/
-StatusBytes SpiritSpiReadRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer)
-{
-  StatusBytes *pStatus;
-  pStatus = (StatusBytes *) RadioSpiReadRegisters(cRegAddress, cNbBytes, pcBuffer);
-  return *pStatus;
-}
-
-
-/**
-* @brief  Send a command
-* @param  cCommandCode: command code to be sent
-* @retval StatusBytes
-*/
-StatusBytes SpiritSpiCommandStrobes(uint8_t cCommandCode)
-{
-  StatusBytes *pStatus;
-  pStatus = (StatusBytes *) RadioSpiCommandStrobes(cCommandCode);
-  return *pStatus;
-}
-
-
-/**
-* @brief  Write data into TX FIFO
-* @param  cNbBytes: number of bytes to be written into TX FIFO
-* @param  pcBuffer: pointer to data to write
-* @retval StatusBytes
-*/
-StatusBytes SpiritSpiWriteFifo(uint8_t cNbBytes, uint8_t* pcBuffer)
-{
-  StatusBytes *pStatus;
-  pStatus = (StatusBytes *) RadioSpiWriteFifo(cNbBytes, pcBuffer);
-  return *pStatus;
-}
-
-/**
-* @brief  Read data from RX FIFO
-* @param  cNbBytes: number of bytes to read from RX FIFO
-* @param  pcBuffer: pointer to data read from RX FIFO
-* @retval StatusBytes
-*/
-StatusBytes SpiritSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer)
-{
-  StatusBytes *pStatus;
-  pStatus = (StatusBytes *) RadioSpiReadFifo(cNbBytes, pcBuffer);
-  return *pStatus;
-}
-
-
-/**
- * @}
- */
- 
-
  /**
  *@}
  */

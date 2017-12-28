@@ -30,7 +30,7 @@ endif
 CC_NOCOLOR ?= 0
 ifeq ($(CC_NOCOLOR),0)
   ifeq ($(shell $(CC) -fdiagnostics-color -E - 2>/dev/null >/dev/null </dev/null ; echo $$?),0)
-    CFLAGS += -fdiagnostics-color
+    CFLAGS += -fdiagnostics-color=never
   endif
 endif
 

@@ -102,14 +102,14 @@ uint8_t * SpiritSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
  */
  
 /* GPIO Exported functions ------------------------------------------------------- */
-FlagStatus SpiritGpioGetLevel(gpio_t xGpio);
+/*FlagStatus SpiritGpioGetLevel(gpio_t xGpio);
 void SpiritGpioSetLevel(gpio_t xGpio, gpio_mode_t xState);
 void SpiritEnterShutdown(void);
 void SpiritExitShutdown(void);
 FlagStatus SpiritCheckShutdown(void);
 void SpiritGpioInit(gpio_t xGpio, gpio_mode_t xGpioMode);
 void SpiritGpioInterruptCmd(gpio_t xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
-
+*/
 /**
  * @}
  */
