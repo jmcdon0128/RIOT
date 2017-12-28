@@ -50,7 +50,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "spsgrf.h"
-//#include "stm32l4xx.h"
+//#include "stm32l475xx.h"
 #include "spsgrf_io.h"
 
 #ifdef __cplusplus

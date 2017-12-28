@@ -53,9 +53,9 @@ extern "C" {
 #endif
   
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32l4xx.h"
-#include "board.h"
-#include "periph/gpio.h"
+#include <stdio.h>
+#include <board.h>
+
 
 typedef enum
 {
@@ -76,7 +76,87 @@ typedef enum
   SUCCESS = !ERROR
 } ErrorStatus;
 
-  
+typedef enum
+{
+  GPIO_PIN_RESET = 0,
+  GPIO_PIN_SET
+}GPIO_PinState;
+
+/* Exported types ------------------------------------------------------------*/
+  /* MCU GPIO pin working mode for GPIO */
+typedef enum                                                                                          
+{
+    RADIO_MODE_GPIO_IN  = 0x00,   /*!< Work as GPIO input */
+    RADIO_MODE_EXTI_IN,           /*!< Work as EXTI */
+    RADIO_MODE_GPIO_OUT,          /*!< Work as GPIO output */
+}RadioGpioMode;  
+
+ /* MCU GPIO pin enumeration for GPIO */
+typedef enum 
+{
+  RADIO_GPIO_0     = 0x00, /*!< GPIO_0 selected */
+  RADIO_GPIO_1     = 0x01, /*!< GPIO_1 selected */
+  RADIO_GPIO_2     = 0x02, /*!< GPIO_2 selected */
+  RADIO_GPIO_3     = 0x03, /*!< GPIO_3 selected */
+  RADIO_GPIO_SDN   = 0x04, /*!< GPIO_SDN selected */
+} RadioGpioPin;   
+
+/**
+ * @defgroup SPSGR_IO_GPIO_Exported_Macros             SPSGR_GPIO Exported Macros
+ * @{
+ */  
+ 
+/* Exported macro ------------------------------------------------------------*/
+ /* MCU GPIO pin working mode for GPIO */
+#define IS_RADIO_GPIO_MODE(MODE) (((MODE) == RADIO_MODE_GPIO_IN) || \
+                               ((MODE) == RADIO_MODE_EXTI_IN) || \
+                               ((MODE) == RADIO_MODE_GPIO_OUT))
+
+/* Number of Arduino pins used for RADIO GPIO interface */
+#define RADIO_GPIO_NUMBER    ((uint8_t)5)
+
+/* MCU GPIO pin enumeration for GPIO */
+#define IS_RADIO_GPIO_PIN(PIN)   (((PIN) == RADIO_GPIO_0) || \
+                               ((PIN) == RADIO_GPIO_1) || \
+                               ((PIN) == RADIO_GPIO_2) || \
+                               ((PIN) == RADIO_GPIO_3) || \
+                               ((PIN) == RADIO_GPIO_SDN))
+
+
+/* @defgroup Radio_Gpio_config_Define */
+/*NOTE: GPIO0, GPIO1, GPIO2 of SPIRIT1 are not used in the expansion board */
+/******************************************************************************/
+/*
+#define RADIO_GPIO_3_PORT                        0
+#define RADIO_GPIO_3_PIN                         0
+#define RADIO_GPIO_3_CLOCK_ENABLE()                __HAL_RCC_GPIOA_CLK_ENABLE()
+#define RADIO_GPIO_3_CLOCK_DISABLE()               __HAL_RCC_GPIOA_CLK_DISABLE() 
+#define RADIO_GPIO_3_SPEED                       0
+#define RADIO_GPIO_3_PUPD                        0
+#define RADIO_GPIO_3_EXTI_LINE                   0
+#define RADIO_GPIO_3_EXTI_MODE                   0
+#define RADIO_GPIO_3_EXTI_PREEMPTION_PRIORITY    2
+#define RADIO_GPIO_3_EXTI_SUB_PRIORITY           2
+
+#define RADIO_GPIO_3_EXTI_IRQN                     EXTI0_IRQn 
+#define RADIO_GPIO_3_EXTI_IRQ_HANDLER              EXTI0_IRQHandler
+*/
+/******************************************************************************/
+
+/*
+#define RADIO_GPIO_SDN_PORT                        GPIOB
+#define RADIO_GPIO_SDN_PIN                         SPSGRF_SDN
+#define RADIO_GPIO_SDN_CLOCK_ENABLE()            __HAL_RCC_GPIOB_CLK_ENABLE()
+#define RADIO_GPIO_SDN_CLOCK_DISABLE()           __HAL_RCC_GPIOB_CLK_DISABLE()
+#define RADIO_GPIO_SDN_SPEED                       GPIO_SPEED_FREQ_VERY_HIGH
+#define RADIO_GPIO_SDN_PUPD                        GPIO_PULLUP
+
+#define RADIO_GPIO_IRQ          RADIO_GPIO_3
+#define SPIRIT_GPIO_IRQ         SPIRIT_GPIO_3
+*/
+/**
+ * @}
+ */
 
  
 /**
@@ -85,12 +165,12 @@ typedef enum
  */
  
 /* Radio SPI Exported functions ------------------------------------------------------- */
-void SpiritSpiInit(void);
-uint8_t * SpiritSpiWriteRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
-uint8_t * SpiritSpiReadRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
-uint8_t * SpiritSpiCommandStrobes(uint8_t cCommandCode);
-uint8_t * SpiritSpiWriteFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
-uint8_t * SpiritSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
+void RadioSpiInit(void);
+uint8_t * RadioSpiWriteRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
+uint8_t * RadioSpiReadRegisters(uint8_t cRegAddress, uint8_t cNbBytes, uint8_t* pcBuffer);
+uint8_t * RadioSpiCommandStrobes(uint8_t cCommandCode);
+uint8_t * RadioSpiWriteFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
+uint8_t * RadioSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
 
 /**
  * @}
@@ -102,14 +182,14 @@ uint8_t * SpiritSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
  */
  
 /* GPIO Exported functions ------------------------------------------------------- */
-/*FlagStatus SpiritGpioGetLevel(gpio_t xGpio);
-void SpiritGpioSetLevel(gpio_t xGpio, gpio_mode_t xState);
-void SpiritEnterShutdown(void);
-void SpiritExitShutdown(void);
-FlagStatus SpiritCheckShutdown(void);
-void SpiritGpioInit(gpio_t xGpio, gpio_mode_t xGpioMode);
-void SpiritGpioInterruptCmd(gpio_t xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
-*/
+FlagStatus RadioGpioGetLevel(RadioGpioPin xGpio);
+void RadioGpioSetLevel(RadioGpioPin xGpio, GPIO_PinState xState);
+void RadioEnterShutdown(void);
+void RadioExitShutdown(void);
+FlagStatus RadioCheckShutdown(void);
+void RadioGpioInit(RadioGpioPin xGpio, RadioGpioMode xGpioMode);
+void RadioGpioInterruptCmd(RadioGpioPin xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
+
 /**
  * @}
  */
