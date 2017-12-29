@@ -139,7 +139,7 @@ static int32_t s_RfModuleOffset=0;
 void Spirit1InterfaceInit(void)
 { 
   /* Initialize the SDN pin micro side */
-  RadioGpioInit(RADIO_GPIO_SDN,RADIO_MODE_GPIO_OUT);
+  RadioGpioInit();
 
   RadioSpiInit();
   
@@ -157,9 +157,6 @@ void Spirit1InterfaceInit(void)
   SpiritManagementRangeExtInit(); 
   
   /* Micro EXTI config */      
-  RadioGpioInit(RADIO_GPIO_3,RADIO_MODE_EXTI_IN);
-  RadioGpioInterruptCmd(RADIO_GPIO_3,0x04,0x04,DISABLE); 
-  RadioGpioInterruptCmd(RADIO_GPIO_3,0x04,0x04,ENABLE);
 }
 
 #if defined(SPIRIT1_HAS_EEPROM)

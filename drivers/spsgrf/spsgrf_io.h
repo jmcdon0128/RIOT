@@ -84,23 +84,6 @@ typedef enum
 
 /* Exported types ------------------------------------------------------------*/
   /* MCU GPIO pin working mode for GPIO */
-typedef enum                                                                                          
-{
-    RADIO_MODE_GPIO_IN  = 0x00,   /*!< Work as GPIO input */
-    RADIO_MODE_EXTI_IN,           /*!< Work as EXTI */
-    RADIO_MODE_GPIO_OUT,          /*!< Work as GPIO output */
-}RadioGpioMode;  
-
- /* MCU GPIO pin enumeration for GPIO */
-typedef enum 
-{
-  RADIO_GPIO_0     = 0x00, /*!< GPIO_0 selected */
-  RADIO_GPIO_1     = 0x01, /*!< GPIO_1 selected */
-  RADIO_GPIO_2     = 0x02, /*!< GPIO_2 selected */
-  RADIO_GPIO_3     = 0x03, /*!< GPIO_3 selected */
-  RADIO_GPIO_SDN   = 0x04, /*!< GPIO_SDN selected */
-} RadioGpioPin;   
-
 /**
  * @defgroup SPSGR_IO_GPIO_Exported_Macros             SPSGR_GPIO Exported Macros
  * @{
@@ -182,13 +165,13 @@ uint8_t * RadioSpiReadFifo(uint8_t cNbBytes, uint8_t* pcBuffer);
  */
  
 /* GPIO Exported functions ------------------------------------------------------- */
-FlagStatus RadioGpioGetLevel(RadioGpioPin xGpio);
-void RadioGpioSetLevel(RadioGpioPin xGpio, GPIO_PinState xState);
+FlagStatus RadioGpioGetLevel(gpio_t xGpio);
+void RadioGpioSetLevel(gpio_t xGpio, GPIO_PinState xState);
 void RadioEnterShutdown(void);
 void RadioExitShutdown(void);
 FlagStatus RadioCheckShutdown(void);
-void RadioGpioInit(RadioGpioPin xGpio, RadioGpioMode xGpioMode);
-void RadioGpioInterruptCmd(RadioGpioPin xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
+void RadioGpioInit(void);
+void RadioGpioInterruptCmd(gpio_t xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
 
 /**
  * @}
