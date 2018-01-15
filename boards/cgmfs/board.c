@@ -19,7 +19,7 @@
  */
 
 #include "board.h"
-//#include "periph/gpio.h"
+#include "periph/gpio.h"
 #include "periph/spi.h"
 
 void board_init(void)

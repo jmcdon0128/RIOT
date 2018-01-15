@@ -26,7 +26,7 @@ extern "C" {
 #define CLOCK_HSE           (0)
     /* 0: no external low speed crystal available,
      * 1: external crystal available (always 32.768kHz) */
-#define CLOCK_LSE           (1)
+#define CLOCK_LSE           (0)
     /* give the target core clock (HCLK) frequency [in Hz], maximum: 80MHz */
 #define CLOCK_CORECLOCK     (80000000U)
     /* PLL configuration: make sure your values are legit!

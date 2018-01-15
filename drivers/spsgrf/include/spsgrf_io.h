@@ -172,6 +172,7 @@ void RadioExitShutdown(void);
 FlagStatus RadioCheckShutdown(void);
 void RadioGpioInit(void);
 void RadioGpioInterruptCmd(gpio_t xGpio, uint8_t nPreemption, uint8_t nSubpriority, FunctionalState xNewState);
+void SPI_TEST(void);
 
 /**
  * @}

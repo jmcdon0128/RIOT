@@ -67,6 +67,7 @@
  * @defgroup SPSGRF_APP_Exported_Constants                SPSGR_GPIO Exported Constants
  * @{
  */
+#define NO_EEPROM (1)
    
 #define CUT_MAX_NO 3
 #define CUT_2_1v3 0x0103

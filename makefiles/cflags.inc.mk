@@ -59,7 +59,8 @@ endif
 CFLAGS += -fno-common
 
 # Enable all default warnings
-CFLAGS += -Wall
+CFLAGS += -Wall 
+CFLAGS += -O0 
 
 ifeq (,$(filter -DDEVELHELP,$(CFLAGS)))
   ifneq (1,$(FORCE_ASSERTS))
