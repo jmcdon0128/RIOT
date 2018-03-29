@@ -93,7 +93,7 @@ typedef enum {
  *
  * @return  An initialized netreg entry
  */
-#ifdef MODULE_GNRC_NETAPI_MBOX
+#if defined(MODULE_GNRC_NETAPI_MBOX) || defined(MODULE_GNRC_NETAPI_CALLBACKS)
 #define GNRC_NETREG_ENTRY_INIT_PID(demux_ctx, pid)  { NULL, demux_ctx, \
                                                       GNRC_NETREG_TYPE_DEFAULT, \
                                                       { pid } }
@@ -332,6 +332,19 @@ void gnrc_netreg_unregister(gnrc_nettype_t type, gnrc_netreg_entry_t *entry);
  * @return  NULL if no entry can be found.
  */
 gnrc_netreg_entry_t *gnrc_netreg_lookup(gnrc_nettype_t type, uint32_t demux_ctx);
+
+/**
+ * @brief   Returns number of entries with the same gnrc_netreg_entry_t::type and
+ *          gnrc_netreg_entry_t::demux_ctx.
+ *
+ * @param[in] type      Type of the protocol.
+ * @param[in] demux_ctx The demultiplexing context for the registered thread.
+ *                      See gnrc_netreg_entry_t::demux_ctx.
+ *
+ * @return  Number of entries with the same gnrc_netreg_entry_t::type and
+ *          gnrc_netreg_entry_t::demux_ctx as the given parameters.
+ */
+int gnrc_netreg_num(gnrc_nettype_t type, uint32_t demux_ctx);
 
 /**
  * @brief   Returns the next entry after @p entry with the same

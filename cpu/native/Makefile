@@ -22,7 +22,8 @@ endif
 ifneq (,$(filter can_linux,$(USEMODULE)))
   DIRS += can
 endif
+ifneq (,$(filter trace,$(USEMODULE)))
+	DIRS += trace
+endif
 
 include $(RIOTBASE)/Makefile.base
-
-INCLUDES = $(NATIVEINCLUDES)
