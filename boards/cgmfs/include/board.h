@@ -19,36 +19,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/*#ifdef IEEE802154_DEFAULT_SUBGHZ_CHANNEL
-#undef IEEE802154_DEFAULT_SUBGHZ_CHANNEL
-#define IEEE802154_DEFAULT_SUBGHZ_CHANNEL (5U)
-#endif
-#ifdef IEEE802154_DEFAULT_PANID
-#undef IEEE802154_DEFAULT_PANID
-#define IEEE802154_DEFAULT_PANID (0xBEEFU)
-#endif
-#ifdef IEEE802154_DEFAULT_TXPOWER
-#undef IEEE802154_DEFAULT_TXPOWER
-#define IEEE802154_DEFAULT_TXPOWER (0)
-#endif
-*/
-/*
- * @brief SPSGRF Pin definitions
- * @{
- */
-#define SPSGRF_GPIO3_EXTI5 GPIO_PIN(PORT_E, 5)
-#define SPSGRF_GPIO3_EXTI2 GPIO_PIN(PORT_A, 2)
-#define SPSGRF_SDN GPIO_PIN(PORT_B, 15)
-#define SPSGRF_CSN GPIO_PIN(PORT_B, 5)
-
-/**
- * @brief SPBTLE Pin definitions
- */
-#define SPBTLE_RF_IRQ_EXTI6 GPIO_PIN(PORT_E, 6)
-#define SPBTLE_RF_SPI3_CSN GPIO_PIN(PORT_D, 13)
-#define SPBTLE_RF_RST GPIO_P IN(PORT_A, 8)
-
 /**
  *  @brief usb pins
  */
@@ -56,13 +26,9 @@ extern "C" {
 #define USB_P GPIO_PIN(PORT_A, 12)
 
 /**
- * @brief wifi module pin definitions
+ * @brief Reed switch input
  */
-#define ISM43362_RST GPIO_PIN(PORT_E, 8)
-#define ISM43362_BOOT0 GPIO_PIN(PORT_B, 12)
-#define ISM43362_WAKEUP GPIO_PIN(PORT_B, 13)
-#define ISM43362_SPI3_CSN GPIO_PIN(PORT_E, 0)
-#define ISM43362_DRDY_EXTI1 GPIO_PIN(PORT_E, 1)
+#define CONTACT_CLOSURE GPIO_PIN(PORT_B, 12)
 
 /**
  * @brief quad spi pin definitions
@@ -144,15 +110,36 @@ extern "C" {
 #define RCC_OSC32_IN GPIO_PIN(PORT_C, 14)
 #define RCC_OSC32_OUT GPIO_PIN(PORT_C, 15)
 
-#define AT86RF2XX_PARAMS_BOARD                                         \
-    {                                                                  \
-        .spi = SPI_2, .spi_clk = SPI_CLK_1MHZ, .cs_pin = EXP_SPI2_CSN, \
-        .int_pin = EXP_IRQ_EXTI2, .sleep_pin = EXP_ARDA5_ADC,          \
-        .reset_pin = EXP_RESET                                         \
+/*
+ * @brief at86rf212b pins
+ * * @{
+ */
+#define AT86RF_IRQ GPIO_PIN(PORT_E, 6)
+#define AT86RF_RST GPIO_PIN(PORT_D, 2)
+#define AT86RF_SLP GPIO_PIN(PORT_A, 8)
+#define AT86RF_CS GPIO_PIN(PORT_D, 0)
+#define AT86RF_SPI SPI_3
+
+/**
+ * @brief BLE pins
+ */
+#define RN4871_TX INTERNAL_UART3_TX
+#define RN4871_RX INTERNAL_UART3_RX
+#define RN4871_MODE GPIO_PIN(PORT_D, 10)
+#define RN4871_IND GPIO_PIN(PORT_D, 11)
+#define RN4871_RST GPIO_PIN(PORT_D, 12)
+
+#define AT86RF2XX_PARAMS_BOARD                                           \
+    {                                                                    \
+        .spi = AT86RF_SPI, .spi_clk = SPI_CLK_1MHZ, .cs_pin = AT86RF_CS, \
+        .int_pin = AT86RF_IRQ, .sleep_pin = AT86RF_SLP,                  \
+        .reset_pin = AT86RF_RST,                                         \
     }
 
 #define LMT01_PARAMS_BOARD \
-    { .read_pin = LMT_READ, .vcc_pin = LMT_VP, .gnd_pin = LMT_VN }
+    { .read_pin = LMT_VNN_WAKE, .vcc_pin = LMT_VP, .gnd_pin = LMT_VN }
+
+#define RN4871_PARAMS_BOARD (0)
 
 /**
  * @brief Initialize board specific hardware, including clock, LEDs and std_IO

@@ -26,7 +26,7 @@ extern "C" {
 #define CLOCK_HSE (0)
 /* 0: no external low speed crystal available,
  * 1: external crystal available (always 32.768kHz) */
-#define CLOCK_LSE (0)
+#define CLOCK_LSE (1)
 /* give the target core clock (HCLK) frequency [in Hz], maximum: 80MHz */
 #define CLOCK_CORECLOCK (80000000U)
 /* PLL configuration: make sure your values are legit!
@@ -81,21 +81,35 @@ static const timer_conf_t timer_config[] = {{.dev = TIM5,
  * @{
  */
 
-static const uart_conf_t uart_config[] = {{.dev = USART1,
-                                           .rcc_mask = RCC_APB2ENR_USART1EN,
-                                           .rx_pin = GPIO_PIN(PORT_B, 7),
-                                           .tx_pin = GPIO_PIN(PORT_B, 6),
-                                           .rx_af = GPIO_AF7,
-                                           .tx_af = GPIO_AF7,
-                                           .bus = APB2,
-                                           .irqn = USART1_IRQn,
-#ifdef UART_USE_DMA
-                                           .dma_stream = 4,
-                                           .dma_chan = 4
-#endif
-}};
+static const uart_conf_t uart_config[] = {
+    {
+        .dev = USART1,
+        .rcc_mask = RCC_APB2ENR_USART1EN,
+        .rx_pin = GPIO_PIN(PORT_B, 7),
+        .tx_pin = GPIO_PIN(PORT_B, 6),
+        .rx_af = GPIO_AF7,
+        .tx_af = GPIO_AF7,
+        .bus = APB2,
+        .irqn = USART1_IRQn,
+        /*#ifdef UART_USE_DMA
+                                                   .dma_stream = 4,
+                                                   .dma_chan = 4
+        #endif
+        */
+    },
+    {
+        .dev = USART3,
+        .rcc_mask = RCC_APB1ENR1_USART3EN,
+        .rx_pin = GPIO_PIN(PORT_D, 9),
+        .tx_pin = GPIO_PIN(PORT_D, 8),
+        .rx_af = GPIO_AF7,
+        .tx_af = GPIO_AF7,
+        .bus = APB1,
+        .irqn = USART3_IRQn,
+    }};
 
 #define UART_0_ISR (isr_usart1)
+#define UART_1_ISR (isr_usart2)
 
 #define UART_NUMOF (sizeof(uart_config) / sizeof(uart_config[0]))
 /** @} */
@@ -182,9 +196,7 @@ static const spi_conf_t spi_config[] = {{.dev = SPI3,
                                          .cs_pin = GPIO_PIN(PORT_D, 5),
                                          .af = GPIO_AF5,
                                          .rccmask = RCC_APB1ENR1_SPI2EN,
-                                         .apbbus = APB1}
-
-};
+                                         .apbbus = APB1}};
 
 #define SPI_NUMOF (sizeof(spi_config) / sizeof(spi_config[0]))
 /** @} */

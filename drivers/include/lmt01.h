@@ -54,7 +54,7 @@ typedef struct {
  *
  * @pre     @p dev != NULL
  */
-void lmt01_setup(lmt01_t *dev, const lmt01_params_t *params);
+int lmt01_init(lmt01_t *dev, const lmt01_params_t *params);
 
 /**
  * @brief   Read temperature of given LMT01 device in d°C

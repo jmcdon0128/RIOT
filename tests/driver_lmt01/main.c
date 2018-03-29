@@ -32,7 +32,7 @@ int main(void) {
     puts("lmt01 test application\n");
 
     /* setup temperature device */
-    lmt01_setup(&temp_sensor, &(lmt01_params[0]));
+    lmt01_init(&temp_sensor, &(lmt01_params[0]));
 
     while (1) {
         if (lmt01_read_temperature(&temp_sensor)) {
