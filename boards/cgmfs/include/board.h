@@ -129,7 +129,7 @@ extern "C" {
 #define RN4871_IND GPIO_PIN(PORT_D, 11)
 #define RN4871_RST GPIO_PIN(PORT_D, 12)
 
-#define AT86RF2XX_PARAMS_BOARD                                           \
+#define AT86RF2XX_PARAMS                                                 \
     {                                                                    \
         .spi = AT86RF_SPI, .spi_clk = SPI_CLK_1MHZ, .cs_pin = AT86RF_CS, \
         .int_pin = AT86RF_IRQ, .sleep_pin = AT86RF_SLP,                  \
